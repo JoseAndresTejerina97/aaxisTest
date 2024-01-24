@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Productos</title>
+        <link rel="stylesheet" href="/bootstrap.min.css">
+        <link rel="stylesheet" href="/init.css?v=1.1">
+    </head>
+    <body>
+    <div x-data="createDataProduct()">
+    <div  class="loading" x-show="isLoading">     <span class="loader"></span></div>
+      <div class="container">
+             <h1 class="">Bienvenido</h1>
+  
+       <div>
+        <button class="btn btn-primary" x-on:click="createProduct()">+ Nuevo</button>
+        <table   class="table table-hover">
+           <thead class="">
+                    <tr>
+                    <th scope="col" class="">SKU</th>
+                    <th scope="col" class="">Nombre</th>
+                    <th scope="col" class="">Descripción</th>
+                    <th  scope="col" class="" ><th>
+                    </tr>
+            </thead>
+
+            <tbody  x-init="products = await fetchProduct().then((data) => data )">
+               
+                <template x-for="product in products">
+                  <tr >
+                    <td ><p x-text="product['sku']"></p></td>
+                    <td ><p x-text="product['name']"></p></td>
+                    <td ><p x-text="product['description']"></p></td>
+                    <td><button x-on:click="updateProduct(product['sku'])" class="btn btn-secondary">Editar</button></td>
+                  </tr>
+                </template>
+            </tbody>
+        </table>
+      
+</div>
+    </div>
+        <script>
+        function createDataProduct() {
+
+                return {
+                    isLoading:false,
+                    products: [],
+                    async fetchProduct  () 
+                    {
+                        this.isLoading=true;
+                        return await new Promise((resolve, reject) =>
+                        {
+                            fetch("/api/products")
+                            .then((response) => response.json())
+                            .then((json) =>
+                            {
+                                this.isLoading=false;
+                                resolve(json);
+                            });
+                        });
+                    },
+                     updateProduct (sku) 
+                    {
+                        location.href="/product/update/"+sku;
+                    },
+
+                     createProduct (sku)
+                    {
+                        location.href="/product/create";
+                    }
+                }
+        }
+        </script>
+        <script  src="/alpine.min.js"></script>
+
+    </body>
+</html>
