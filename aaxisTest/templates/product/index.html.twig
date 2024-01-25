@@ -44,12 +44,47 @@
                 return {
                     isLoading:false,
                     products: [],
+                    async getToken(){
+                        return  new Promise((resolve, reject) =>
+                        {
+                            
+                            fetch('/api/login_check', {
+                            method: 'POST',
+                            headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({"username":"aaxis","password":"aaxis_test"})
+                            })
+                            .then((response) => response.json())
+                            .then((json) =>
+                            {
+                                sessionStorage.setItem("token-aaxis",json.token)
+                                resolve(json.token);
+                            });
+                        });
+
+                    },
                     async fetchProduct  () 
                     {
                         this.isLoading=true;
+                        if(sessionStorage.getItem("token-aaxis")){
+                             var token= sessionStorage.getItem("token-aaxis");
+                        }else{
+                               var token = await this.getToken().then(ret_val => {
+                                     return ret_val
+                                });
+                        }
                         return await new Promise((resolve, reject) =>
                         {
-                            fetch("/api/products")
+                             
+                            fetch("/api/products", {
+                            headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer '+ token
+                            }
+                            })
                             .then((response) => response.json())
                             .then((json) =>
                             {

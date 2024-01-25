@@ -44,7 +44,28 @@
                     sku: '{{ product.sku }}',
                     productName: '{{ product.productName }}',
                     description: '{{ product.description }}',
-                    updateProduct(sku,description,productName)
+                    async getToken(){
+                        return  new Promise((resolve, reject) =>
+                        {
+                            
+                            fetch('/api/login_check', {
+                            method: 'POST',
+                            headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({"username":"aaxis","password":"aaxis_test"})
+                            })
+                            .then((response) => response.json())
+                            .then((json) =>
+                            {
+                                sessionStorage.setItem("token-aaxis",json.token)
+                                resolve(json.token);
+                            });
+                        });
+
+                    },
+                    async updateProduct(sku,description,productName)
                     {   
                         if(sku ==""){
                             alert("Sku no puede estar vacío");
@@ -61,14 +82,22 @@
                         var self=this;
                         this.alertMessage="Actualizacion exitosa"
                         this.isLoading=true;
-                        return  new Promise((resolve, reject) =>
+                        if(sessionStorage.getItem("token-aaxis")){
+                             var token= sessionStorage.getItem("token-aaxis");
+                        }else{
+                               var token = await this.getToken().then(ret_val => {
+                                     return ret_val
+                                });
+                        }
+                        return  await new Promise((resolve, reject) =>
                         {
                             
                             fetch('/api/products', {
                             method: 'PATCH',
                             headers: {
                             'Accept': 'application/json',
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer '+ token
                             },
                             body: JSON.stringify([{product_name: productName, sku: sku,description: description}])
                             })

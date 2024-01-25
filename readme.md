@@ -3,7 +3,7 @@ This repository presents the management of APIS through JWT and the implementati
 
 <!--suppress HtmlDeprecatedAttribute -->
 <p align="center">
-    <img src="public/assets/hexagon.jpg" alt="hexagon">
+    <img src="https://github.com/JoseAndresTejerina97/aaxisTest/blob/main/public_html/assets/hexagon.jpg?raw=true" alt="hexagon">
 </p>
 
 ## What's in the environment:
@@ -29,21 +29,16 @@ This repository presents the management of APIS through JWT and the implementati
 ### 🔥 Application execution
 
 1. Install the backend dependencies: `composer install`. 
-2. Run command cp .env.test .env 
-3. Create database & tables with `php bin/console d:d:c` then `php bin/console make:migration`
-   and `php bin/console migration:migrate` or force with `php bin/console d:s:u -f`
+2. Run command `cp .env.test .env `
+3. Create database & tables with `php bin/console d:d:c` then `php bin/console doctrine:migration:migrate`
 
-4. Run command php bin/console aaxis:create-user
+4. Run command `php bin/console aaxis:create-user` and  `php bin/console lexik:jwt:generate-keypair --overwrite`
 
 5. Access the address `http://localhost` to access the project
 
  Access the address `http://localhost:8081` to access pgadmin
   - user: admin@localhost.com
   - password: admin
-
-## Persistent data:
-
-- postgresql data: `./docker/postgresql/dbdata`
 
 
 ## Comments:
